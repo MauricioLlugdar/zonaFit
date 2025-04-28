@@ -1,16 +1,21 @@
 package zona_fit.connection;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class Connect {
     public static Connection getConnection(){
         Connection conn = null;
-        String dbHost = System.getenv("DB_HOST");
-        String dbPort = System.getenv("DB_PORT");
-        String dbUser = System.getenv("DB_USER");
-        String dbPassword = System.getenv("DB_PASSWORD");
-        String dbName = System.getenv("DB_NAME");
+
+        Dotenv dotenv = Dotenv.load();
+
+        String dbHost = dotenv.get("DB_HOST");
+        String dbPort = dotenv.get("DB_PORT");
+        String dbUser = dotenv.get("DB_USER");
+        String dbPassword = dotenv.get("DB_PASSWORD");
+        String dbName = dotenv.get("DB_NAME");
         var url = "jdbc:mysql://" + dbHost + ":" + dbPort + "/" + dbName; // connection line
 
         try {
@@ -21,5 +26,8 @@ public class Connect {
             System.out.println("ERROR: CONNECTING TO DATABASE" + e.getMessage());
         }
         return conn;
+    }
+
+    public static void main(String[] args) {
     }
 }
