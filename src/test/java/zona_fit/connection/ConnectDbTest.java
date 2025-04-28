@@ -10,10 +10,10 @@ public class ConnectDbTest { //Try to connect to Mysql
     @Test // Put the test annotation for JUnit
     public void testConnection() {
         try (Connection conn = Connect.getConnection()) {
-            assertNotNull(conn);
+            assertNotNull(conn); // If the conn is null
             assertFalse(conn.isClosed());
         } catch (SQLException e) {
-            fail("La conexión no debería fallar: " + e.getMessage());
+            fail("Connection to mysql failed: " + e.getMessage());
         }
     }
 }
