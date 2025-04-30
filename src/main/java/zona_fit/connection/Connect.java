@@ -27,7 +27,4 @@ public class Connect {
         }
         return conn;
     }
-
-    public static void main(String[] args) {
-    }
 }
