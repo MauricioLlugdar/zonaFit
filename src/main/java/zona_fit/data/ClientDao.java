@@ -123,36 +123,6 @@ public class ClientDao implements IClientDao {
 
         return rs == 1;
     }
-
-    public static void main(String[] args) {
-        IClientDao clientDao = new ClientDao();
-        Client clientEdu = new Client("Candelaria2", "Chapuis2", 2);
-        System.out.println("***Add Client");
-        if(!clientDao.addClient(clientEdu)) System.out.println("Impossible to add");
-        System.out.println("***List Clients***");
-        List<Client> clients = clientDao.showClients();
-        for(Client client: clients){
-            System.out.println(client.toString());
-        }
-        Client clientFound = clientDao.searchClientById(1);
-        if(clientFound == null){
-            System.out.println("Client not found with id " + 1);
-        } else{
-            System.out.println(("The client found was: " + clientFound.toString()));
-        }
-
-        Client client1 = new Client(3,"Hola", "Chau", 2);
-        if(clientDao.modifyClient(client1)){
-            System.out.println(client1+ " successfully modified");
-        }
-
-        if(clientDao.deleteClient(3)){
-            System.out.println("Client with id 3 successfully delete");
-        }else {
-            System.out.println("Error while deleting client with id 3");
-        }
-
-    }
 }
 
 
