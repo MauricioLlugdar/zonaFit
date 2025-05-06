@@ -33,18 +33,34 @@ public class ClientDao implements IClientDao {
         }catch (SQLException e){
             System.out.println("Error listing the clients " + e.getMessage());
         } finally {
-            try{
-                conn.close();
-            }catch (Exception e){
-                System.out.println("Error closing the connection " + e.getMessage());
-            }
+            Connect.closeConnection(conn);
         }
         return clients;
     }
 
     @Override
-    public boolean searchClientById(Client client) {
-        return false;
+    public Client searchClientById(int id) {
+        PreparedStatement ps;
+        ResultSet rs;
+        Connection conn = Connect.getConnection();
+        Client client = null;
+        var sql = "SELECT * FROM client WHERE client.id = ?";
+        try{
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            if(rs.next()) {
+                client = new Client(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("lastName"),
+                        rs.getInt("membership")
+                );
+            }
+        }catch(SQLException e){
+            System.out.println("Error while searching for a client by id" + e.getMessage());
+        }
+        return client;
     }
 
     @Override
@@ -63,11 +79,7 @@ public class ClientDao implements IClientDao {
         }catch(SQLException e){
             System.out.println("Error while adding a client " + e.getMessage());
         }finally {
-            try{
-                conn.close();
-            }catch (Exception e){
-                System.out.println("Error closing the connection " + e.getMessage());
-            }
+            Connect.closeConnection(conn);
         }
         return (rs == 1);
     }
@@ -84,13 +96,19 @@ public class ClientDao implements IClientDao {
 
     public static void main(String[] args) {
         IClientDao clientDao = new ClientDao();
-        Client clientEdu = new Client("Eduardo", "Gomez", 12);
+        Client clientEdu = new Client("Candelaria2", "Chapuis2", 2);
         System.out.println("***Add Client");
-        clientDao.addClient(clientEdu);
+        if(!clientDao.addClient(clientEdu)) System.out.println("Impossible to add");
         System.out.println("***List Clients***");
         List<Client> clients = clientDao.showClients();
         for(Client client: clients){
             System.out.println(client.toString());
+        }
+        Client clientFound = clientDao.searchClientById(1);
+        if(clientFound == null){
+            System.out.println("Client not found with id " + 1);
+        } else{
+            System.out.println(("The client found was: " + clientFound.toString()));
         }
     }
 }
