@@ -27,4 +27,11 @@ public class Connect {
         }
         return conn;
     }
+    public static void closeConnection(Connection conn){
+        try{
+            conn.close();
+        }catch (Exception e){
+            System.out.println("Error closing the connection " + e.getMessage());
+        }
+    }
 }
