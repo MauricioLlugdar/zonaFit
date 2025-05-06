@@ -8,5 +8,5 @@ public interface IClientDao {
     Client searchClientById(int id);
     boolean addClient(Client client);
     boolean modifyClient(Client client);
-    boolean deleteClient(Client client);
+    boolean deleteClient(int id);
 }

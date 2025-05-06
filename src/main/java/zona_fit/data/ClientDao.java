@@ -86,12 +86,42 @@ public class ClientDao implements IClientDao {
 
     @Override
     public boolean modifyClient(Client client) {
-        return false;
+        PreparedStatement ps; // Prepared the sql sentence that its going to impact in the db
+        Connection conn = Connect.getConnection();
+        int rs = 0;
+        var sql = "UPDATE client SET name = ?, lastName = ?, membership = ? WHERE client.id = ?";
+        try {
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, client.getName());
+            ps.setString(2, client.getLastName());
+            ps.setInt(3, client.getMembership());
+            ps.setInt(4, client.getId());
+            rs = ps.executeUpdate();
+        } catch (SQLException e){
+            System.out.println("Error while modifying a client " + e.getMessage());
+        } finally {
+            Connect.closeConnection(conn);
+        }
+        return (rs == 1);
     }
 
     @Override
-    public boolean deleteClient(Client client) {
-        return false;
+    public boolean deleteClient(int id) {
+        PreparedStatement ps; // Prepared the sql sentence that its going to impact in the db
+        Connection conn = Connect.getConnection();
+        int rs = 0;
+        var sql = "DELETE FROM client WHERE client.id = ?";
+        try{
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            rs = ps.executeUpdate();
+        }catch (SQLException e){
+            System.out.println("Error while modifying a client " + e.getMessage());
+        } finally {
+            Connect.closeConnection(conn);
+        }
+
+        return rs == 1;
     }
 
     public static void main(String[] args) {
@@ -110,6 +140,18 @@ public class ClientDao implements IClientDao {
         } else{
             System.out.println(("The client found was: " + clientFound.toString()));
         }
+
+        Client client1 = new Client(3,"Hola", "Chau", 2);
+        if(clientDao.modifyClient(client1)){
+            System.out.println(client1+ " successfully modified");
+        }
+
+        if(clientDao.deleteClient(3)){
+            System.out.println("Client with id 3 successfully delete");
+        }else {
+            System.out.println("Error while deleting client with id 3");
+        }
+
     }
 }
 
